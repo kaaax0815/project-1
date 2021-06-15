@@ -1,0 +1,4 @@
+# TODO
+
+- [ ] Livereload
+- [x] Nodemon
