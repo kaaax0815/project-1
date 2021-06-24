@@ -2,7 +2,7 @@ import { config } from 'dotenv-safe';
 // Loading Environment Variables
 config();
 import connectLivereload from 'connect-livereload';
-import Express, { static as Static } from 'express';
+import Express from 'express';
 import livereload from 'livereload';
 import { join } from 'path';
 
@@ -31,7 +31,12 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/', Static(join(__dirname, '../static')));
+app.use('/local', (req, res) => res.sendFile(join(__dirname, '../static/local.html')));
+
+app.use('/peer', (req, res) => res.sendFile(join(__dirname, '../static/peer.html')));
+
+app.use('/css', Express.static(join(__dirname, '../static/css')));
+app.use('/js', Express.static(join(__dirname, '../static/js')));
 
 app.use('/api', apiRoutes);
 
