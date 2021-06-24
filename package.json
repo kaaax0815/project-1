@@ -7,7 +7,7 @@
     "build": "tsc && webpack",
     "start": "node dist/index.js",
     "dev": "nodemon",
-    "dev:ts": "ts-node src/index.ts",
+    "dev:wp": "nodemon --config nodemonwebpack.json",
     "lint": "eslint . --ignore-path ./.gitignore && stylelint **/*.{css,html} --ignore-path ./.gitignore",
     "lint:fix": "eslint . --ignore-path ./.gitignore --fix && stylelint **/*.{css,html} --ignore-path ./.gitignore --fix"
   },

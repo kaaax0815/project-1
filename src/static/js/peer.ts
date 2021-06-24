@@ -1,14 +1,30 @@
 import $ from 'jquery';
 import Peer, { DataConnection } from 'peerjs';
+import qrcode from 'qrcode';
 
 document.addEventListener('DOMContentLoaded', () => {
   $('#tttwrapper').hide();
   // Last Part of Url
-  const peeridregex = /[a-z,0-9]+-[a-z,0-9]+-[a-z,0-9]+-[a-z,0-9]+-[a-z,0-9]+/g;
+  const peeridregex = /[a-z,0-9]+-[a-z,0-9]+-[a-z,0-9]+-[a-z,0-9]+-[a-z,0-9]+/;
   const peer = new Peer();
   peer.on('open', (id) => {
     $('#ownpeerid').text(id);
+    qrcode.toCanvas(
+      document.getElementById('ownpeeridqr'),
+      `https://code-server.kaaaxcreators.de/proxy/8080/peer?peerid=${id}`,
+      { errorCorrectionLevel: 'high' },
+      (error) => console.error(error)
+    );
+    $('#ownpeeridqrlink').attr('target', 'blank');
+    $('#ownpeeridqrlink').attr(
+      'href',
+      `https://code-server.kaaaxcreators.de/proxy/8080/peer?peerid=${id}`
+    );
   });
+  const peerid = getUrlVars()['peerid'];
+  if (peeridregex.test(peerid)) {
+    $('#partnerpeerid').val(peerid);
+  }
   peer.on('connection', connection);
   $('#partnerstartbtn').on('click', () => {
     const partnerpeerid = <string>$('#partnerpeerid').val();
@@ -29,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
 async function connection(conn: DataConnection) {
   conn.on('open', () => {
     $('#partnerstartbtn').text('Verbunden');
+    $('#peerjs').hide();
     conn.on('data', data);
     conn.on('error', error);
     conn.send({ action: 'start' });
@@ -292,4 +309,21 @@ function TicTacToe(element: Element) {
 
   // Ereignis bei Tabelle überwachen
   field.addEventListener('click', mark);
+}
+
+/** get querystring
+ * @author https://stackoverflow.com/a/4656873/13707908
+ */
+function getUrlVars() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const vars: any = {};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let hash: any;
+  const hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+  for (let i = 0; i < hashes.length; i++) {
+    hash = hashes[i].split('=');
+    vars.push(hash[0]);
+    vars[hash[0]] = hash[1];
+  }
+  return vars;
 }
