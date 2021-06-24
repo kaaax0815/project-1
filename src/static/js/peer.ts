@@ -13,9 +13,9 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('ownpeeridqr'),
       `https://code-server.kaaaxcreators.de/proxy/8080/peer?peerid=${id}`,
       { errorCorrectionLevel: 'high' },
-      (error) => console.error(error)
+      (error) => error && console.error(error)
     );
-    $('#ownpeeridqrlink').attr('target', 'blank');
+    $('#ownpeeridqrlink').attr('target', '_blank');
     $('#ownpeeridqrlink').attr(
       'href',
       `https://code-server.kaaaxcreators.de/proxy/8080/peer?peerid=${id}`
@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
  * @param {DataConnection} conn
  * @see <https://peerjs.com/docs.html#dataconnection>
  */
+let globalConn: DataConnection;
 async function connection(conn: DataConnection) {
   conn.on('open', () => {
     $('#partnerstartbtn').text('Verbunden');
@@ -49,6 +50,7 @@ async function connection(conn: DataConnection) {
     conn.on('data', data);
     conn.on('error', error);
     conn.send({ action: 'start' });
+    globalConn = conn;
   });
 }
 
@@ -70,9 +72,10 @@ async function data(data: any) {
   if (data.action == 'start') {
     $('#tttwrapper').show();
     const games = document.querySelectorAll('.tic-tac-toe');
-    for (let i = 0; i < games.length; i++) {
-      TicTacToe(games[i]); // aktuelles Fundstück steht in games[i]
-    }
+    TicTacToe(games[0]);
+  }
+  if (data.action == 'mark') {
+    $(`button:contains(${data.loc})`).trigger('click');
   }
 }
 
@@ -87,7 +90,8 @@ function TicTacToe(element: Element) {
     ['Mitte links', 'Mitte mittig', 'Mitte rechts'],
     ['unten links', 'unten mittig', 'unten rechts']
   ];
-  const messages = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const messages: any = {
     oturn: 'Spieler O ist am Zug.',
     xturn: 'Spieler X ist am Zug.',
     owins: 'Spieler O gewinnt.',
@@ -172,8 +176,6 @@ function TicTacToe(element: Element) {
       field.className = 'game-over';
 
       if (winner) {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
         caption.innerHTML = messages[players[current] + 'wins'];
       } else {
         caption.innerHTML = messages['draw'];
@@ -220,8 +222,6 @@ function TicTacToe(element: Element) {
         }
 
         // Hinweis hinzufügen
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
         caption.innerHTML = messages[players[current] + 'turn'];
       });
     }
@@ -257,7 +257,10 @@ function TicTacToe(element: Element) {
     // Zelle bei Bedarf markieren
     if (td && !finished && td.tagName.toLowerCase() == 'td' && td.className.length < 1) {
       td.className = players[current]; // Klassennamen vergeben
-      // td.innerHTML = players[current];
+      // td.innerHTML = players[current]; <- not needed
+      if (globalConn) {
+        globalConn.send({ action: 'mark', loc: td.children[0].textContent! });
+      }
 
       check(); // Spiel zuende?
 
@@ -265,8 +268,6 @@ function TicTacToe(element: Element) {
         current = 1 - current; // zwischen 0 und 1 hin- und herschalten
 
         // Hinweis aktualisieren
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
         caption.innerHTML = messages[players[current] + 'turn'];
       }
     }
@@ -285,8 +286,6 @@ function TicTacToe(element: Element) {
   field.appendChild(document.createElement('tbody'));
 
   // Hinweis einrichten
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
   caption.innerHTML = messages[players[current] + 'turn'];
 
   for (r = 0; r < 3; r++) {
@@ -316,7 +315,7 @@ function TicTacToe(element: Element) {
  */
 function getUrlVars() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const vars: any = {};
+  const vars: any = [];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let hash: any;
   const hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
