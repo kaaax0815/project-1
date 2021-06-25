@@ -6,6 +6,8 @@ module.exports = {
   optimization: {
     minimizer: [new TerserPlugin({ extractComments: false })]
   },
+  mode: 'development',
+  devtool: 'inline-source-map',
   entry: {
     peer: './dist/static/js/peer.js',
     local: './dist/static/js/local.js'
@@ -13,6 +15,5 @@ module.exports = {
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, './static/js')
-  },
-  mode: 'development'
+  }
 };

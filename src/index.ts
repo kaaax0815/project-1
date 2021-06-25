@@ -35,11 +35,11 @@ app.use('/local', (req, res) => res.sendFile(join(__dirname, '../static/local.ht
 
 app.use('/peer', (req, res) => res.sendFile(join(__dirname, '../static/peer.html')));
 
-app.use('/', (req, res) => res.sendFile(join(__dirname, '../static/index.html')));
-
 app.use('/css', Express.static(join(__dirname, '../static/css')));
 app.use('/js', Express.static(join(__dirname, '../static/js')));
 
 app.use('/api', apiRoutes);
+
+app.use('/', (req, res) => res.sendFile(join(__dirname, '../static/index.html')));
 
 app.listen(port, () => console.info(`[EXPRESS] Listing on Port ${port}`));

@@ -2,6 +2,12 @@ import $ from 'jquery';
 import Peer, { DataConnection } from 'peerjs';
 import qrcode from 'qrcode';
 
+// Available Players
+const players = ['x', 'o'];
+let globalMe: string;
+/** If Origin of Click comes from Jquery (-> Remote) */
+let globalJquery: boolean;
+
 document.addEventListener('DOMContentLoaded', () => {
   $('#tttwrapper').hide();
   // Last Part of Url
@@ -32,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
       $('#partnerstartbtn').text('Falsches Format');
     } else {
       $('#partnerstartbtn').text('Verbinden...');
+      globalMe = players[Math.floor(Math.random() * players.length)];
       connection(peer.connect(partnerpeerid));
     }
   });
@@ -49,7 +56,11 @@ async function connection(conn: DataConnection) {
     $('#peerjs').hide();
     conn.on('data', data);
     conn.on('error', error);
-    conn.send({ action: 'start' });
+    if (globalMe) {
+      conn.send({ action: 'start', player: players[1 - players.indexOf(globalMe)] });
+    } else {
+      conn.send({ action: 'start' });
+    }
     globalConn = conn;
   });
 }
@@ -62,6 +73,7 @@ async function error(err: any) {
   console.error(err);
 }
 
+let globalSelf: string;
 /**
  * Handle data
  * @see <https://peerjs.com/docs.html#dataconnection-on-data>
@@ -71,18 +83,23 @@ async function data(data: any) {
   console.log(data);
   if (data.action == 'start') {
     $('#tttwrapper').show();
+    globalSelf = data.player;
+    console.log(globalMe || globalSelf);
     const games = document.querySelectorAll('.tic-tac-toe');
     TicTacToe(games[0]);
   }
   if (data.action == 'mark') {
+    globalJquery = true;
     $(`button:contains(${data.loc})`).trigger('click');
   }
 }
 
 function TicTacToe(element: Element) {
+  /** Who I am (x or o) */
+  const whois = globalMe || globalSelf;
+  $('#whois').text(whois.toUpperCase());
   /** Spieler der grad dran ist 0: x; 1: o */
   let current = 0;
-  const players = ['x', 'o'];
   const field = document.createElement('table');
   const caption = document.createElement('caption');
   const labels = [
@@ -92,6 +109,8 @@ function TicTacToe(element: Element) {
   ];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const messages: any = {
+    myturn: 'Du bist dran!',
+    otherturn: 'Du bist nicht dran!',
     oturn: 'Spieler O ist am Zug.',
     xturn: 'Spieler X ist am Zug.',
     owins: 'Spieler O gewinnt.',
@@ -222,7 +241,11 @@ function TicTacToe(element: Element) {
         }
 
         // Hinweis hinzufügen
-        caption.innerHTML = messages[players[current] + 'turn'];
+        if ((current == 0 && whois == 'x') || (current == 1 && whois == 'o')) {
+          caption.innerHTML = messages['myturn'] + '<br>' + messages[players[current] + 'turn'];
+        } else {
+          caption.innerHTML = messages['otherturn'] + '<br>' + messages[players[current] + 'turn'];
+        }
       });
     }
   }
@@ -246,6 +269,17 @@ function TicTacToe(element: Element) {
    * @param {MouseEvent} event
    */
   function mark(event: MouseEvent) {
+    // pass if x is allowed and i am x or if o is allowed and i am o
+    if ((current == 0 && whois == 'x') || (current == 1 && whois == 'o')) {
+      console.log('You are permitted!');
+    } else {
+      if (globalJquery) {
+        console.log('Remote is permitted');
+        globalJquery = false;
+      } else {
+        return console.log('You are NOT permitted!');
+      }
+    }
     // Tabellenzelle bestimmen
     let td = <HTMLElement>event.target;
 
@@ -268,7 +302,11 @@ function TicTacToe(element: Element) {
         current = 1 - current; // zwischen 0 und 1 hin- und herschalten
 
         // Hinweis aktualisieren
-        caption.innerHTML = messages[players[current] + 'turn'];
+        if ((current == 0 && whois == 'x') || (current == 1 && whois == 'o')) {
+          caption.innerHTML = messages['myturn'] + '<br>' + messages[players[current] + 'turn'];
+        } else {
+          caption.innerHTML = messages['otherturn'] + '<br>' + messages[players[current] + 'turn'];
+        }
       }
     }
   }
@@ -286,7 +324,11 @@ function TicTacToe(element: Element) {
   field.appendChild(document.createElement('tbody'));
 
   // Hinweis einrichten
-  caption.innerHTML = messages[players[current] + 'turn'];
+  if ((current == 0 && whois == 'x') || (current == 1 && whois == 'o')) {
+    caption.innerHTML = messages['myturn'] + '<br>' + messages[players[current] + 'turn'];
+  } else {
+    caption.innerHTML = messages['otherturn'] + '<br>' + messages[players[current] + 'turn'];
+  }
 
   for (r = 0; r < 3; r++) {
     // neue Tabellenzeile
@@ -306,8 +348,21 @@ function TicTacToe(element: Element) {
     }
   }
 
+  $('td').hover(changeCursor);
+
   // Ereignis bei Tabelle überwachen
   field.addEventListener('click', mark);
+
+  /** Switch Cursor between pointer and not-allowed */
+  function changeCursor() {
+    if ((current == 0 && whois == 'x') || (current == 1 && whois == 'o')) {
+      console.log('cursor pointer');
+      $('td').css('cursor', 'pointer');
+    } else {
+      console.log('cursor not-allowed');
+      $('td').css('cursor', 'not-allowed');
+    }
+  }
 }
 
 /** get querystring
