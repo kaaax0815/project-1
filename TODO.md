@@ -8,4 +8,4 @@
 - [ ] Game Counter (multiple games)
 - [ ] Themes / Design
 - [x] Fix multiple TicTacToe Games among themselves
-- [ ] Be able to host on docker without (code-server auth)
+- [x] Be able to host on docker/netlify

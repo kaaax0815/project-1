@@ -82,8 +82,7 @@ async function data(data: any) {
     $('#tttwrapper').show();
     globalSelf = data.player;
     console.log(globalMe || globalSelf);
-    const games = document.querySelectorAll('.tic-tac-toe');
-    TicTacToe(games[0]);
+    TicTacToe(document.querySelectorAll('.tic-tac-toe')[0]);
   }
   if (data.action == 'mark') {
     globalJquery = true;
