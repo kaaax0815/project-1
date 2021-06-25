@@ -6,7 +6,6 @@ import Express from 'express';
 import livereload from 'livereload';
 import { join } from 'path';
 
-import apiRoutes from './routes/api';
 import console from './utils/logger';
 
 const app = Express();
@@ -37,8 +36,6 @@ app.use('/peer', (req, res) => res.sendFile(join(__dirname, '../static/peer.html
 
 app.use('/css', Express.static(join(__dirname, '../static/css')));
 app.use('/js', Express.static(join(__dirname, '../static/js')));
-
-app.use('/api', apiRoutes);
 
 app.use('/', (req, res) => res.sendFile(join(__dirname, '../static/index.html')));
 
