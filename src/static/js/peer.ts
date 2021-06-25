@@ -7,6 +7,8 @@ const players = ['x', 'o'];
 let globalMe: string;
 /** If Origin of Click comes from Jquery (-> Remote) */
 let globalJquery: boolean;
+/** If Origin of New CLick comes from Jquery (-> Remote) */
+let globalNewGame: boolean;
 
 document.addEventListener('DOMContentLoaded', () => {
   $('#tttwrapper').hide();
@@ -83,10 +85,12 @@ async function data(data: any) {
     globalSelf = data.player;
     console.log(globalMe || globalSelf);
     TicTacToe(document.querySelectorAll('.tic-tac-toe')[0]);
-  }
-  if (data.action == 'mark') {
+  } else if (data.action == 'mark') {
     globalJquery = true;
     $(`button:contains(${data.loc})`).trigger('click');
+  } else if (data.action == 'newgame') {
+    globalNewGame = true;
+    $('button:contains(Neues Spiel?)').trigger('click');
   }
 }
 
@@ -212,6 +216,11 @@ function TicTacToe(element: Element) {
       caption.appendChild(buttons);
 
       buttons.addEventListener('click', () => {
+        if (globalNewGame) {
+          globalNewGame = false;
+        } else {
+          globalConn.send({ action: 'newgame' });
+        }
         const cells = field.getElementsByTagName('td');
         let button;
         let cell;

@@ -39,4 +39,6 @@ app.use('/js', Express.static(join(__dirname, '../static/js')));
 
 app.use('/', (req, res) => res.sendFile(join(__dirname, '../static/index.html')));
 
-app.listen(port, () => console.info(`[EXPRESS] Listing on Port ${port}`));
+const server = app.listen(port, () => console.info(`[EXPRESS] Listing on Port ${port}`));
+
+process.on('SIGINT', () => server.close());
