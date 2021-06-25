@@ -17,15 +17,12 @@ document.addEventListener('DOMContentLoaded', () => {
     $('#ownpeerid').text(id);
     qrcode.toCanvas(
       document.getElementById('ownpeeridqr'),
-      `https://code-server.kaaaxcreators.de/proxy/8080/peer?peerid=${id}`,
+      `${window.location.href}?peerid=${id}`,
       { errorCorrectionLevel: 'high' },
       (error) => error && console.error(error)
     );
     $('#ownpeeridqrlink').attr('target', '_blank');
-    $('#ownpeeridqrlink').attr(
-      'href',
-      `https://code-server.kaaaxcreators.de/proxy/8080/peer?peerid=${id}`
-    );
+    $('#ownpeeridqrlink').attr('href', `${window.location.href}?peerid=${id}`);
   });
   const peerid = getUrlVars()['peerid'];
   if (peeridregex.test(peerid)) {
