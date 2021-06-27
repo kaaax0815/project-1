@@ -1,4 +1,4 @@
-.tic-tac-toe table {
+#tic-tac-toe table {
   border: 2px solid black;
   border-collapse: collapse;
   margin-left: auto;
@@ -12,7 +12,7 @@
   flex-direction: column;
 }
 
-.tic-tac-toe td {
+#tic-tac-toe td {
   border: 1px solid black;
   height: 5em;
   position: relative;
@@ -20,32 +20,32 @@
   width: 5em;
 }
 
-.tic-tac-toe table:not(.game-over) td {
+#tic-tac-toe table:not(.game-over) td {
   cursor: pointer;
 }
 
-.tic-tac-toe td button {
+#tic-tac-toe td button {
   position: absolute;
   left: -100vw;
 }
 
-.tic-tac-toe .o {
+#tic-tac-toe .o {
   background: #8f8;
   color: #8f8;
 }
 
-.tic-tac-toe .x {
+#tic-tac-toe .x {
   background: #f88;
   color: #f88;
 }
 
-.tic-tac-toe .o,
-.tic-tac-toe .x {
+#tic-tac-toe .o,
+#tic-tac-toe .x {
   z-index: -1;
 }
 
-.tic-tac-toe .o::after,
-.tic-tac-toe .x::after {
+#tic-tac-toe .o::after,
+#tic-tac-toe .x::after {
   color: black;
   display: block;
   font-size: 5em;
@@ -53,18 +53,18 @@
   width: 100%;
 }
 
-.tic-tac-toe .o::after {
+#tic-tac-toe .o::after {
   content: "○";
   top: -0.2em;
 }
 
-.tic-tac-toe .x::after {
+#tic-tac-toe .x::after {
   content: "×";
   top: -0.125em;
 }
 
-.tic-tac-toe .o.highlighted::after,
-.tic-tac-toe .x.highlighted::after {
+#tic-tac-toe .o.highlighted::after,
+#tic-tac-toe .x.highlighted::after {
   text-shadow:
     0 0 1px #fff,
     0 0 2px #fff,
@@ -75,6 +75,6 @@
     0 0 7px white;
 }
 
-.tic-tac-toe .game-over {
+#tic-tac-toe .game-over {
   border-color: red;
 }

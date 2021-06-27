@@ -9,6 +9,8 @@ let globalMe: string;
 let globalJquery: boolean;
 /** If Origin of New CLick comes from Jquery (-> Remote) */
 let globalNewGame: boolean;
+/** Player who starts, either 0 or 1 */
+let globalStartingPlayer: number;
 
 document.addEventListener('DOMContentLoaded', () => {
   $('#tttwrapper').hide();
@@ -38,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       $('#partnerstartbtn').text('Verbinden...');
       globalMe = players[Math.floor(Math.random() * players.length)];
+      globalStartingPlayer = Math.round(Math.random());
       connection(peer.connect(partnerpeerid));
     }
   });
@@ -56,7 +59,11 @@ async function connection(conn: DataConnection) {
     conn.on('data', data);
     conn.on('error', error);
     if (globalMe) {
-      conn.send({ action: 'start', player: players[1 - players.indexOf(globalMe)] });
+      conn.send({
+        action: 'start',
+        player: players[1 - players.indexOf(globalMe)],
+        startingPlayer: globalStartingPlayer
+      });
     } else {
       conn.send({ action: 'start' });
     }
@@ -83,8 +90,14 @@ async function data(data: any) {
   if (data.action == 'start') {
     $('#tttwrapper').show();
     globalSelf = data.player;
-    console.log(globalMe || globalSelf);
-    TicTacToe(document.querySelectorAll('.tic-tac-toe')[0]);
+    console.log('Current Player: ' + (globalMe || globalSelf));
+    // Needs this because 0 is interpreted as false
+    const startingPlayer =
+      globalStartingPlayer === 0 || globalStartingPlayer === 1
+        ? globalStartingPlayer
+        : data.startingPlayer;
+    console.log('Starting Player: ' + startingPlayer);
+    TicTacToe(document.getElementById('tic-tac-toe')!, startingPlayer);
   } else if (data.action == 'mark') {
     globalJquery = true;
     $(`button:contains(${data.loc})`).trigger('click');
@@ -94,12 +107,16 @@ async function data(data: any) {
   }
 }
 
-function TicTacToe(element: Element) {
+function TicTacToe(element: Element, startingPlayer = 0) {
+  if (element.children.length >= 1) {
+    console.log('Game already exists! Creating new one');
+    element.innerHTML = '';
+  }
   /** Who I am (x or o) */
   const whois = globalMe || globalSelf;
   $('#whois').text(whois.toUpperCase());
   /** Spieler der grad dran ist 0: x; 1: o */
-  let current = 0;
+  let current = startingPlayer;
   const field = document.createElement('table');
   const caption = document.createElement('caption');
   const labels = [
@@ -221,36 +238,7 @@ function TicTacToe(element: Element) {
         } else {
           globalConn.send({ action: 'newgame' });
         }
-        const cells = field.getElementsByTagName('td');
-        let button;
-        let cell;
-
-        // Spiel zuruücksetzen
-        current = 0;
-        finished = false;
-        field.removeAttribute('class');
-
-        for (r = 0; r < 3; r++) {
-          for (c = 0; c < 3; c++) {
-            // Zellen zurücksetzen
-            cell = cells[r * 3 + c];
-            cell.removeAttribute('class');
-            cell.innerHTML = '';
-
-            // Button hinzufügen
-            button = document.createElement('button');
-            button.innerHTML = labels[r][c] + ' ' + messages['select'];
-
-            cell.appendChild(button);
-          }
-        }
-
-        // Hinweis hinzufügen
-        if ((current == 0 && whois == 'x') || (current == 1 && whois == 'o')) {
-          caption.innerHTML = messages['myturn'] + '<br>' + messages[players[current] + 'turn'];
-        } else {
-          caption.innerHTML = messages['otherturn'] + '<br>' + messages[players[current] + 'turn'];
-        }
+        clear();
       });
     }
   }
@@ -316,6 +304,39 @@ function TicTacToe(element: Element) {
     }
   }
 
+  function clear() {
+    const cells = field.getElementsByTagName('td');
+    let button;
+    let cell;
+
+    // Spiel zuruücksetzen
+    current = 0;
+    finished = false;
+    field.removeAttribute('class');
+
+    for (r = 0; r < 3; r++) {
+      for (c = 0; c < 3; c++) {
+        // Zellen zurücksetzen
+        cell = cells[r * 3 + c];
+        cell.removeAttribute('class');
+        cell.innerHTML = '';
+
+        // Button hinzufügen
+        button = document.createElement('button');
+        button.innerHTML = labels[r][c] + ' ' + messages['select'];
+
+        cell.appendChild(button);
+      }
+    }
+
+    // Hinweis hinzufügen
+    if ((current == 0 && whois == 'x') || (current == 1 && whois == 'o')) {
+      caption.innerHTML = messages['myturn'] + '<br>' + messages[players[current] + 'turn'];
+    } else {
+      caption.innerHTML = messages['otherturn'] + '<br>' + messages[players[current] + 'turn'];
+    }
+  }
+
   // Spielanleitung ins Dokument einfügen
   b = document.createElement('p');
   b.innerHTML = messages['instructions'];
@@ -361,10 +382,8 @@ function TicTacToe(element: Element) {
   /** Switch Cursor between pointer and not-allowed */
   function changeCursor() {
     if ((current == 0 && whois == 'x') || (current == 1 && whois == 'o')) {
-      console.log('cursor pointer');
       $('td').css('cursor', 'pointer');
     } else {
-      console.log('cursor not-allowed');
       $('td').css('cursor', 'not-allowed');
     }
   }

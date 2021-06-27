@@ -108,3 +108,5 @@ dist
 
 # Database
 db/
+# Local Netlify folder
+.netlify
