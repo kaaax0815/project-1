@@ -7,6 +7,10 @@
 - [x] x shouldn't be able to click when its o's turn and way around
 - [x] randomize who is starting
 - [ ] ? Game Counter (multiple games)
-- [ ] Themes / Design (cool grid, cool index page, tab control)
+- [ ] Themes / Design
+- - [x] cool grid
+- - [ ] cool index page
+- - [x] tab control
+- - [ ] white/dark mode
 - [x] Fix multiple TicTacToe Games among themselves
 - [x] Be able to host on docker/netlify

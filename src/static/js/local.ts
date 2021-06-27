@@ -2,7 +2,7 @@
 document.addEventListener('DOMContentLoaded', function () {
   const element = document.getElementById('tic-tac-toe')!;
   /** Spieler der grad dran ist 0: x; 1: o */
-  let current = 0;
+  let current = Math.round(Math.random());
   const players = ['x', 'o'];
   const field = document.createElement('table');
   const caption = document.createElement('caption');
@@ -94,8 +94,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (full || winner) {
       finished = true;
 
-      field.className = 'game-over';
-
       if (winner) {
         caption.innerHTML = messages[players[current] + '-wins'];
       } else {
@@ -123,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let cell;
 
         // Spiel zuruücksetzen
-        current = 0;
+        current = Math.round(Math.random());
         finished = false;
         field.removeAttribute('class');
 
@@ -214,7 +212,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     for (c = 0; c < 3; c++) {
       // neue Tabellenzelle
-      tr.appendChild(document.createElement('td'));
+      const td = document.createElement('td');
+      td.tabIndex = r == 0 ? r + 1 + c : r == 1 ? r + 2 + c + 1 : r + 4 + c + 1;
+      tr.appendChild(td);
 
       // Klickbutton
       b = document.createElement('button');

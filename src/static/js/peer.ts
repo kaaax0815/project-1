@@ -9,8 +9,10 @@ let globalMe: string;
 let globalJquery: boolean;
 /** If Origin of New CLick comes from Jquery (-> Remote) */
 let globalNewGame: boolean;
-/** Player who starts, either 0 or 1 */
+/** Player who starts, either 0 or 1 (-> Remote) */
 let globalStartingPlayer: number;
+/** Player who starts after New Game (-> Remote) */
+let globalNewPlayer: number | undefined;
 
 document.addEventListener('DOMContentLoaded', () => {
   $('#tttwrapper').hide();
@@ -54,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
 let globalConn: DataConnection;
 async function connection(conn: DataConnection) {
   conn.on('open', () => {
+    window.history.pushState('', '', '/peer');
     $('#partnerstartbtn').text('Verbunden');
     $('#peerjs').hide();
     conn.on('data', data);
@@ -103,6 +106,7 @@ async function data(data: any) {
     $(`button:contains(${data.loc})`).trigger('click');
   } else if (data.action == 'newgame') {
     globalNewGame = true;
+    globalNewPlayer = data.newPlayer;
     $('button:contains(Neues Spiel?)').trigger('click');
   }
 }
@@ -209,8 +213,6 @@ function TicTacToe(element: Element, startingPlayer = 0) {
     if (full || winner) {
       finished = true;
 
-      field.className = 'game-over';
-
       if (winner) {
         caption.innerHTML = messages[players[current] + 'wins'];
       } else {
@@ -233,12 +235,16 @@ function TicTacToe(element: Element, startingPlayer = 0) {
       caption.appendChild(buttons);
 
       buttons.addEventListener('click', () => {
+        const player = Math.round(Math.random());
         if (globalNewGame) {
           globalNewGame = false;
         } else {
-          globalConn.send({ action: 'newgame' });
+          globalConn.send({ action: 'newgame', newPlayer: player });
         }
-        clear();
+        const newPlayer = globalNewPlayer === 0 || globalNewPlayer === 1 ? globalNewPlayer : player;
+        console.log({ globalNewPlayer, player, newPlayer });
+        globalNewPlayer = undefined;
+        clear(newPlayer);
       });
     }
   }
@@ -304,13 +310,13 @@ function TicTacToe(element: Element, startingPlayer = 0) {
     }
   }
 
-  function clear() {
+  function clear(newPlayer: number) {
     const cells = field.getElementsByTagName('td');
     let button;
     let cell;
 
     // Spiel zuruücksetzen
-    current = 0;
+    current = newPlayer;
     finished = false;
     field.removeAttribute('class');
 
@@ -364,7 +370,9 @@ function TicTacToe(element: Element, startingPlayer = 0) {
 
     for (c = 0; c < 3; c++) {
       // neue Tabellenzelle
-      tr.appendChild(document.createElement('td'));
+      const td = document.createElement('td');
+      td.tabIndex = r == 0 ? r + 1 + c : r == 1 ? r + 2 + c + 1 : r + 4 + c + 1;
+      tr.appendChild(td);
 
       // Klickbutton
       b = document.createElement('button');
