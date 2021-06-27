@@ -1,6 +1,6 @@
 // Starten wenn DOM geladen wurde
 document.addEventListener('DOMContentLoaded', function () {
-  const element = document.querySelectorAll('.tic-tac-toe')[0];
+  const element = document.getElementById('tic-tac-toe')!;
   /** Spieler der grad dran ist 0: x; 1: o */
   let current = 0;
   const players = ['x', 'o'];
