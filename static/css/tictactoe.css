@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
+body {
+  font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial-Unicode, Arial, sans-serif;
+}
+
 #tic-tac-toe table {
   border-spacing: 4px 2px;
   margin-left: auto;
@@ -52,16 +58,24 @@
   width: 100%;
 }
 
+.o {
+  color: green;
+}
+
+.x {
+  color: red;
+}
+
 #tic-tac-toe .o::after {
   color: green;
-  content: "○";
+  content: "🞅";
   top: -0.2em;
 }
 
 #tic-tac-toe .x::after {
   color: red;
-  content: "×";
-  top: -0.125em;
+  content: "✖";
+  top: -0.2em;
 }
 
 #tic-tac-toe .x.highlighted::after {

@@ -9,7 +9,7 @@
 - [ ] ? Game Counter (multiple games)
 - [ ] Themes / Design
 - - [x] cool grid
-- - [ ] cool index page
+- - [x] cool index page
 - - [x] tab control
 - - [ ] white/dark mode
 - [x] Fix multiple TicTacToe Games among themselves

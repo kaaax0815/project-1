@@ -4,18 +4,23 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="js/peer.js"></script>
   <link rel="stylesheet" href="css/tictactoe.css">
-  <title>TicTacToe P2P</title>
+  <script defer src="js/peer.js"></script>
+  <title>Tic Tac Toe - Peer</title>
 </head>
 <body>
   <section id="main">
     <section id="peerjs">
-      <p>Dein Peer ID: <span id="ownpeerid"></span><a id="ownpeeridqrlink"><canvas id="ownpeeridqr"></canvas></a></p>
-      <p>Partner Peer ID <input type="text" id="partnerpeerid" /><button id="partnerstartbtn">Spiel starten</button></p>
+      <a id="ownpeeridqrlink"><canvas id="ownpeeridqr"></canvas></a>
+      <p>Dein Peer ID: <span id="ownpeerid"></span></p>
+      <form id="peeridform">
+        <label for="partnerpeerid">Partner Peer ID </label>
+        <input type="text" id="partnerpeerid" required />
+        <input id="partnerstartbtn" type="submit" value="Spiel starten" />
+      </form>
     </section>
     <div id="tttwrapper">
-      <h1>Tic-Tac-Toe</h1>
+      <h1>Tic Tac Toe - Peer</h1>
       <p>Du bist Spieler: <span id="whois"></span></p>
       <div id="tic-tac-toe"></div>
     </div>

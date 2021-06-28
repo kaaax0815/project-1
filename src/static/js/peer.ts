@@ -35,13 +35,14 @@ document.addEventListener('DOMContentLoaded', () => {
     $('#partnerpeerid').val(peerid);
   }
   peer.on('connection', connection);
-  $('#partnerstartbtn').on('click', () => {
+  $('#peeridform').on('submit', (e) => {
+    e.preventDefault();
     const partnerpeerid = <string>$('#partnerpeerid').val();
     if (!peeridregex.test(partnerpeerid)) {
-      $('#partnerstartbtn').text('Falsches Format');
+      $('#partnerstartbtn').val('Falsches Format');
     } else {
-      $('#partnerstartbtn').text('Verbinden...');
-      globalMe = players[Math.floor(Math.random() * players.length)];
+      $('#partnerstartbtn').val('Verbinden...');
+      globalMe = players[Math.round(Math.random())];
       globalStartingPlayer = Math.round(Math.random());
       connection(peer.connect(partnerpeerid));
     }
@@ -118,7 +119,8 @@ function TicTacToe(element: Element, startingPlayer = 0) {
   }
   /** Who I am (x or o) */
   const whois = globalMe || globalSelf;
-  $('#whois').text(whois.toUpperCase());
+  $('#whois').text(whois == 'x' ? '✖' : '🞅');
+  $('#whois').removeClass('x o').addClass(whois);
   /** Spieler der grad dran ist 0: x; 1: o */
   let current = startingPlayer;
   const field = document.createElement('table');
@@ -132,10 +134,10 @@ function TicTacToe(element: Element, startingPlayer = 0) {
   const messages: any = {
     myturn: 'Du bist dran!',
     otherturn: 'Du bist nicht dran!',
-    oturn: 'Spieler O ist am Zug.',
-    xturn: 'Spieler X ist am Zug.',
-    owins: 'Spieler O gewinnt.',
-    xwins: 'Spieler X gewinnt.',
+    oturn: 'Spieler 🞅 ist am Zug.',
+    xturn: 'Spieler ✖ ist am Zug.',
+    owins: 'Spieler 🞅 gewinnt.',
+    xwins: 'Spieler ✖ gewinnt.',
     draw: 'Das Spiel endet unentschieden.',
     instructions: 'Zum Spielen bitte abwechselnd in die Spielfelder klicken!',
     select: 'wählen',

@@ -13,10 +13,10 @@ document.addEventListener('DOMContentLoaded', function () {
   ];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const messages: any = {
-    'o-turn': 'Spieler O ist am Zug.',
-    'x-turn': 'Spieler X ist am Zug.',
-    'o-wins': 'Spieler O gewinnt.',
-    'x-wins': 'Spieler X gewinnt.',
+    'o-turn': 'Spieler 🞅 ist am Zug.',
+    'x-turn': 'Spieler ✖ ist am Zug.',
+    'o-wins': 'Spieler 🞅 gewinnt.',
+    'x-wins': 'Spieler ✖ gewinnt.',
     draw: 'Das Spiel endet unentschieden.',
     instructions: 'Zum Spielen bitte abwechselnd in die Spielfelder klicken!',
     select: 'wählen',
