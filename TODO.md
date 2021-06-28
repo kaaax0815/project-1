@@ -11,6 +11,8 @@
 - - [x] cool grid
 - - [x] cool index page
 - - [x] tab control
-- - [ ] white/dark mode
+- - [x] white/dark mode
+- - [ ] svg inside a makes a weird
+- - [ ] manual theme switch
 - [x] Fix multiple TicTacToe Games among themselves
 - [x] Be able to host on docker/netlify

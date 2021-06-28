@@ -5,9 +5,15 @@ body {
   justify-content: center;
   display: flex;
   flex-direction: column;
+  background-color: var(--bg-color);
+  color: var(--txt-color);
   font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial-Unicode, Arial, sans-serif;
 }
 
 #gamemodes {
   flex-direction: row;
+}
+
+.svg {
+  fill: var(--txt-color);
 }

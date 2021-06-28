@@ -2,6 +2,14 @@
 
 body {
   font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial-Unicode, Arial, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--txt-color);
+}
+
+input,
+button {
+  background-color: var(--input-color);
+  color: var(--txt-color);
 }
 
 #tic-tac-toe table {
@@ -19,16 +27,16 @@ body {
 
 #tic-tac-toe td {
   height: 5em;
-  border: 1px solid black;
+  border: 1px solid var(--border-color);
   border-radius: 5px;
   position: relative;
-  background-color: #efefef;
+  background-color: var(--cells-color);
   width: 5em;
 }
 
 #tic-tac-toe td:not(.x):not(.o):active,
 #tic-tac-toe td:not(.x):not(.o):hover {
-  border: 2px solid black;
+  border: 2px solid var(--border-color);
   border-radius: 5px;
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -59,43 +67,43 @@ body {
 }
 
 .o {
-  color: green;
+  color: var(--o-color);
 }
 
 .x {
-  color: red;
+  color: var(--x-color);
 }
 
 #tic-tac-toe .o::after {
-  color: green;
+  color: var(--o-color);
   content: "🞅";
   top: -0.2em;
 }
 
 #tic-tac-toe .x::after {
-  color: red;
+  color: var(--x-color);
   content: "✖";
   top: -0.2em;
 }
 
 #tic-tac-toe .x.highlighted::after {
   text-shadow:
-    0 0 1px hsl(0, 100%, 75%),
-    0 0 2px hsl(0, 100%, 75%),
-    0 0 3px hsl(0, 100%, 75%),
-    0 0 4px hsl(0, 100%, 75%),
-    0 0 5px hsl(0, 100%, 75%),
-    0 0 6px hsl(0, 100%, 75%),
-    0 0 7px hsl(0, 100%, 75%);
+    0 0 1px var(--x-shadow),
+    0 0 2px var(--x-shadow),
+    0 0 3px var(--x-shadow),
+    0 0 4px var(--x-shadow),
+    0 0 5px var(--x-shadow),
+    0 0 6px var(--x-shadow),
+    0 0 7px var(--x-shadow);
 }
 
 #tic-tac-toe .o.highlighted::after {
   text-shadow:
-    0 0 1px lightgreen,
-    0 0 2px lightgreen,
-    0 0 3px lightgreen,
-    0 0 4px lightgreen,
-    0 0 5px lightgreen,
-    0 0 6px lightgreen,
-    0 0 7px lightgreen;
+    0 0 1px var(--o-shadow),
+    0 0 2px var(--o-shadow),
+    0 0 3px var(--o-shadow),
+    0 0 4px var(--o-shadow),
+    0 0 5px var(--o-shadow),
+    0 0 6px var(--o-shadow),
+    0 0 7px var(--o-shadow);
 }

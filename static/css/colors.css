@@ -1,0 +1,53 @@
+/* Global Colors */
+:root {
+  --bg-color: #181818;
+  --txt-color: #fff;
+  --cells-color: #3f3f3f;
+  --input-color: #3f3f3f;
+  --border-color: white;
+  --o-color: green;
+  --o-shadow: lightgreen;
+  --x-color: red;
+  --x-shadow: hsl(0, 100%, 75%);
+}
+
+/* Light Theme */
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg-color: #fff;
+    --txt-color: #000;
+    --cells-color: #efefef;
+    --input-color: #efefef;
+    --border-color: black;
+    --o-color: green;
+    --o-shadow: lightgreen;
+    --x-color: red;
+    --x-shadow: hsl(0, 100%, 75%);
+  }
+}
+
+/** Manual Theme Selector **/
+
+body.dark {
+  --bg-color: #181818;
+  --txt-color: #fff;
+  --cells-color: #3f3f3f;
+  --input-color: #3f3f3f;
+  --border-color: white;
+  --o-color: green;
+  --o-shadow: lightgreen;
+  --x-color: red;
+  --x-shadow: hsl(0, 100%, 75%);
+}
+
+body.light {
+  --bg-color: #fff;
+  --txt-color: #000;
+  --cells-color: #efefef;
+  --input-color: #efefef;
+  --border-color: black;
+  --o-color: green;
+  --o-shadow: lightgreen;
+  --x-color: red;
+  --x-shadow: hsl(0, 100%, 75%);
+}
