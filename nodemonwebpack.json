@@ -1,6 +1,0 @@
-{
-  "watch": ["src/static"],
-  "ext": "ts,json",
-  "ignore": ["src/**/*.spec.ts"],
-  "exec": "yarn build"
-}
