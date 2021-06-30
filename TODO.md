@@ -12,7 +12,6 @@
 - - [x] cool index page
 - - [x] tab control
 - - [x] white/dark mode
-- - [ ] svg inside a makes a weird
-- - [ ] manual theme switch
+- - [x] svg inside a makes a weird
 - [x] Fix multiple TicTacToe Games among themselves
 - [x] Be able to host on docker/netlify
